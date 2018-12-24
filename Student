@@ -1,0 +1,159 @@
+
+/**
+ * For this assignment, you will utilize assertions and then throw 
+ * the proper exceptions. You will need to correctly perform the tests 
+ * and then appropriately handle errors, if they occur. 
+ * The scenario is student data in which their first and last 
+ * names must be provided along with valid assignment scores.
+ *
+ * Brian Sndyer
+ * 3/25/18
+ */
+public class Student {
+    // declares instance variables
+    private String firstName, lastName, letterGrade; 
+    private double[] scores;
+    // constructor 
+    public Student(String firstName, String lastName, double[] scores) {
+        String msg;
+        // if no first name was provided, error is thrown
+        if (firstName.length() < 1) {
+            msg = "First name cannot be empty";
+            throw new IllegalArgumentException(msg);
+        // if no last name was provided, error is thrown
+        } else if (lastName.length() < 1) {
+            msg = "Last Name cannot be empty";
+            throw new IllegalArgumentException(msg);
+        // else, initializes instance variables    
+        } else {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.scores = scores;
+            // method that sets the letter grade based off scores
+            setLetterGrade();
+        }
+    }
+    // getter method for first name
+    public String getFirstName() {
+        return firstName;
+    }
+    // getter method for last name
+    public String getLastName() {
+        return lastName;
+    }
+    // getter method for letter grade
+    public String getLetterGrade() {
+        return letterGrade;
+    }
+    // getter method for a score value at a specific index
+    public double getScore(int index) {
+        return scores[index];
+    }
+    // setter method for first name
+    public void setFirstName(String replace) {
+        firstName = replace;
+    }
+    // setter method for last name
+    public void setLastName(String replace) {
+        lastName = replace;
+    }
+    // method that sets the letter grade based off scores
+    public void setLetterGrade() {
+        String msg;
+        // if no scores were provided, error is thrown
+        if (scores.length < 1) {
+            msg = "Grade List cannot be empty";
+            throw new IllegalArgumentException(msg);
+        } else if (scores.length > 0) {
+            double total = 0;
+            // otherwise all the scores are totaled together and then divided by the number of scores to get the average
+            for (int i = 0; i < scores.length; i++) {
+                total += scores[i];
+            }
+            double average = (total / scores.length);
+            // depending on what the average is, a letter grade is assigned
+            if (average >= 90) {
+                letterGrade = "A:";
+            } else if (average >= 80) {
+                letterGrade = "B:";
+            } else if (average >= 70) {
+                letterGrade = "C:";
+            } else if (average >= 60) {
+                letterGrade = "D:";
+            } else {
+                letterGrade = "F:";
+            }
+        }
+    }
+    // setter method for a score at a specific index
+    public void setScore(double replace, int index) {
+        scores[index] = replace;
+    }
+    // overriden method for toString method
+    public String toString() {
+        String s = "";
+        // String s contains all of the score values, but formatted
+        for (int i = 0; i < scores.length; i++) {
+           s += String.format("%1s %4.2f", " ", scores[i]);
+        }
+        // formats string to print student info
+        String str = String.format("%-9s %-8s %3s %3s", firstName, lastName,
+                     " - ", letterGrade);
+        // adds two strings together to one string that has all the student information
+        str = str + s;
+        // returns that string
+        return str;
+    }
+}
+
+/**
+ * Tester for Student class
+ * 
+ * Brian Snyder
+ * 3/26/18
+ */
+// imports file to use Lists
+import java.util.*;
+public class studentTester {
+    public static void main (String args[]) {
+        // declares a list of Students
+        List<Student> students = new ArrayList<Student>();
+        // Adds students who will run through code successfully
+        // The scores for each student are determined by the method createGrades, which has the parameter of an int
+        // which determines the # of assignments the student has, and then gives a random grade for these assignments
+        students.add(new Student("Benjamin", "Clark", createGrades(5)));
+        students.add(new Student("Rick", "Sanchez", createGrades(10)));
+        students.add(new Student("Bryan", "Johnson", createGrades(2)));
+        students.add(new Student("Jessica", "Smith", createGrades(4)));
+        
+        // tests exception when 0 grades are added
+        // uncomment line below to see error
+        // students.add(new Student("Rick", "Sanchez", createGrades(0)));
+        
+        // tests exception when a first name is not entered
+        // uncomment line below to see error
+        // students.add(new Student("","Kent", createGrades(9)));
+        
+        // test exception when a last name is not entered
+        // uncomment line below to see error
+        // students.add(new Student("Bryan", "", createGrades(2)));
+        
+        // method that prints all the elements of the list
+        printResults(students);
+    }
+    // method that based off an int, uses random to create a double[] the size of this int, which contains random doubles
+    public static double[] createGrades(int num) {
+        double[] scores = new double[num]; // # of assignments = the parameter
+        for (int i = 0; i < scores.length; i++) {
+            scores[i] = Math.random() * 101; // assigns random double from 0 to 100 as a score
+        }
+        return scores; // returns array
+    }
+    // method that prints all of the elements a list
+    public static void printResults(List<Student> students) {
+        System.out.println("Students with letter grades and scores.");
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println(students.get(i));
+        }
+    }
+}
